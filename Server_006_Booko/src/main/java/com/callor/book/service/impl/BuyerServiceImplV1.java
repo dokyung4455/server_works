@@ -9,25 +9,48 @@ import java.util.List;
 
 import com.callor.book.model.BuyerDTO;
 import com.callor.book.model.BuyerVO;
+import com.callor.book.persistence.DBContract;
 import com.callor.book.service.BuyerService;
 
 public class BuyerServiceImplV1 implements BuyerService {
-
+	
 	protected Connection dbConn;
-
 	public BuyerServiceImplV1() {
-		// TODO Auto-generated constructor stub
+		dbConn = DBContract.getDBConnection();
 	}
 
 	@Override
-	public List<BuyerDTO> selectALL() {
+	public List<BuyerDTO> selectAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public BuyerDTO findById(String bu_code) {
-		// TODO Auto-generated method stub
+		// TODO 회원코드로 조회하기
+		String sql = " SELECT * FROM tbl_buyer ";
+		sql += " WHERE bu_code = ? ";
+		
+		PreparedStatement pStr = null;
+		try {
+			pStr = dbConn.prepareStatement(sql);
+			pStr.setString(1, bu_code);
+			
+			List<BuyerDTO> buList = this.select(pStr);
+			BuyerDTO buyerDTO = null;
+			
+			if(buList != null && buList.size() > 0) {
+				buyerDTO = buList.get(0);
+			}
+			return buyerDTO;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
 		return null;
 	}
 
@@ -36,12 +59,12 @@ public class BuyerServiceImplV1 implements BuyerService {
 		// TODO 고객 이름으로 검색하기
 		String sql = " SELECT * FROM tbl_buyer ";
 		sql += " WHERE bu_name LIKE '%' || ? || '%' ";
-
+		
 		PreparedStatement pStr = null;
 		try {
+			
 			pStr = dbConn.prepareStatement(sql);
 			pStr.setString(1, bu_name.trim());
-			
 			List<BuyerDTO> buList = this.select(pStr);
 			return buList;
 			
@@ -49,10 +72,6 @@ public class BuyerServiceImplV1 implements BuyerService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-
-		
 		return null;
 	}
 
@@ -85,13 +104,12 @@ public class BuyerServiceImplV1 implements BuyerService {
 		List<BuyerDTO> buList = new ArrayList<BuyerDTO>();
 		ResultSet rSet = pStr.executeQuery();
 		while(rSet.next()) {
-			
 			BuyerDTO buDTO = new BuyerDTO();
-			buDTO.setBu_code(rSet.getString("bu_code"));
-			buDTO.setBu_name(rSet.getString("bu_name"));
-			buDTO.setBu_tel(rSet.getString("bu_tel"));
-			buDTO.setBu_addr(rSet.getString("bu_addr"));
-			buDTO.setBu_birth(rSet.getInt("bu_birth"));
+			buDTO.setBu_code( rSet.getString("bu_code") );
+			buDTO.setBu_name( rSet.getString("bu_name") );
+			buDTO.setBu_tel( rSet.getString("bu_tel") );
+			buDTO.setBu_addr( rSet.getString("bu_addr") );
+			buDTO.setBu_birth( rSet.getInt("bu_birth") );
 			buList.add(buDTO);
 		}
 		return buList;

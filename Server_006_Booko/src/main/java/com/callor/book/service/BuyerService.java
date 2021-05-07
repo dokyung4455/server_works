@@ -10,7 +10,7 @@ import com.callor.book.model.BuyerVO;
  */
 
 public interface BuyerService {
-public List<BuyerDTO> selectALL();
+public List<BuyerDTO> selectAll();
 
 public BuyerDTO findById(String bu_code);
 public List<BuyerDTO> findByName(String bu_name);
