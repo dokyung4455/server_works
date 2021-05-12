@@ -11,7 +11,7 @@
 <h1>반갑습니다</h1>
 <c:forEach items ="${BRLIST}" var="BR">
 <p></p> }
- 	<a hrf="rent/seq?id=${BR.br_seq}">
+ 	<a hrf="food/seq?id=${BR.br_seq}">
 	${BR.br_bcode},
 	${BR.br_bname},
 	${BR.br_tel},
