@@ -1,6 +1,8 @@
 package com.callor.diet.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,16 +12,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.callor.diet.model.FoodDTO;
+import com.callor.diet.model.MyFoodVO;
 import com.callor.diet.service.FoodService;
+import com.callor.diet.service.MyFoodService;
 import com.callor.diet.service.impl.FoodServiceImplV1;
+import com.callor.diet.service.impl.MyFoodServiceImplV1;
 
 @WebServlet("/food/*")
 public class FoodController extends HttpServlet {
 	
 	protected FoodService fdService;
+	protected MyFoodService mfService;
 	public FoodController() {
 		// TODO Auto-generated constructor stub
 		fdService = new FoodServiceImplV1();
+		mfService = new MyFoodServiceImplV1();
 	}
 
 	
@@ -37,6 +44,21 @@ public class FoodController extends HttpServlet {
 			System.out.println("요청 subPath 없음");
 		} else if(subPath.equals("/search")) { // 식품검색시 보여주기 구현
 			ReqController.forward(req, resp, "search");
+			
+		} else if(subPath.equals("/insert")) {
+			// 식품을 선택하여 식품코드를 전달받은 후 섭취정보를 입력하기 위한 화면을 보여주기
+			// 전달받은 식품코드로 식품정보를 조회하여 insert.jsp에 전달하기
+			String fd_code = req.getParameter("fd_code"); // inser.jsp에서 mf_code로 지정된값 받아서 fd_code 변수에 담기
+			
+			FoodDTO fdDTO = fdService.findById(fd_code);
+			req.setAttribute("FOOD", fdDTO);
+			
+			Date date = new Date(System.currentTimeMillis());
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+			String today = sd.format(date);
+			req.setAttribute("TODAY", today);
+			
+			ReqController.forward(req, resp, "insert");
 			
 		}
 		
@@ -58,6 +80,26 @@ public class FoodController extends HttpServlet {
 			req.setAttribute("FOODS", foodList); // foodList를 search에서 FOODS라는 이름으로 items에 보내자
 			
 			ReqController.forward(req, resp, "search");
+			
+			
+		} else if(subPath.equals("/insert")) {
+			System.out.println("insert 전달 완료");
+			String strFcode = req.getParameter("mf_code");
+			String strDate = req.getParameter("mf_date");
+			String strQty = req.getParameter("mf_qty");
+			
+			MyFoodVO myFoodVO = new MyFoodVO();
+			myFoodVO.setMf_code(strFcode);
+			myFoodVO.setMf_date(strDate);
+			myFoodVO.setMf_qty(strQty);
+			
+			int result = mfService.insert(myFoodVO);
+			if(result > 0) {
+				System.out.println("추가 성공");
+				resp.sendRedirect("/diet/");
+			} else {
+				System.out.println("추가 실패");
+			}
 			
 			
 		}
