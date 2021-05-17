@@ -1,29 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set value="${pageContext.request.contextPath}" var="rootPath" />
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<c:set value="${pageContext.request.contextPath}" var="rootPath" />
+<%-- 외부 css file 가져오기
+ webapp 폴더는 프로젝트의 외부에서 접근할때 root Folder로 인식된다
+ 슬래시(/)로 시작되는 경로는 webapp 폴더로 인식된다.
+ 
+ 그런데 지금 프로젝트에서 슬래시(/)로 접근하는 모든 요청은 homeController가 catcher 하도록 만들어져 있기 때문에 어떠한 파일로 연결을 할 수 없다. --%>
+
+<%-- chrome browser의 캐쉬 때문에 css, js등 외부 파일을 변경해도 적용이 안되는 경우가 있다.
+ ?ver=숫자 값을 변경하면 chrome browser가 파일이 변경된것으로 인식하여 새로고침을  --%>
+<link rel="stylesheet" href="${rootPath}/css/home.css?ver=1">
 <style type="text/css">
-h1 {
-	background-color: rgba(0, 200, 0, 0.7);
-	color: white;
-	padding: 1.2rem;
-	text-align: center;
-}
-
-a {
-	text-decoration: none;
-	text-align: center;
-}
-
-/* CSS 3 를 사용한 interactive 스타일 지정, 동적(Dynamic) 스타일 지정*/
-/* a tag에 마우스가 떠 있으면 */
-a:hover {
-	text-decoration: underline;
-	background-color: rgba(0,30,200, 0.5); 
-}
 </style>
 </head>
 <body>
@@ -31,5 +26,14 @@ a:hover {
 	<%-- /diet/food/search --%>
 	<a href="${pageContext.request.contextPath}/food/search">섭취정보 등록</a>
 
+	<div>
+		<form action="">
+			<label>날짜</label> <input name="mf_date"/>
+		</form>
+	</div>
+
+
+	<%-- jsp 파일에서 다른 jsp파일 연결하기 --%>
+	<%@ include file="/WEB-INF/views/list.jsp"%>
 </body>
 </html>

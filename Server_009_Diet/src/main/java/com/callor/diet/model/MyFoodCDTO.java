@@ -22,7 +22,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MyFoodCDTO {
-	
+		private Long mf_seq; //= "일련번호";
 		private String mf_date;  //= "섭취일자";
 		private String mf_fcode;  // = "식품코드";
 		private String mf_fname;  // = "식품명";
